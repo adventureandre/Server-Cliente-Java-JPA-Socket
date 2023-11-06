@@ -12,6 +12,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -44,12 +46,15 @@ public class CadastroServer {
                 String login = (String) in.readObject();
                 String senha = (String) in.readObject();
                 String mensagem = (String) in.readObject();
-                
+
                 System.out.println("login=" + login + "   senha=" + senha);
                 System.out.println("mensagem=" + mensagem);
-                
+
                 out.writeObject("GRAVANDO NO BANCO - login=" + login + " senha=" + login);
-                out.flush();
+               // out.flush();
+                
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CadastroServer.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } catch (IOException e) {
