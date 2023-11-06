@@ -6,7 +6,11 @@ package cadastroserver;
 
 import cadastroserver.controller.UsuarioJpaController;
 import cadastroserver.model.Usuario;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -22,20 +26,34 @@ public class CadastroServer {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("CadastroServerPU");
 
         UsuarioJpaController ctrlUsu = new UsuarioJpaController(emf);
-        
-       
+
         List<Usuario> usuarios = ctrlUsu.findUsuarioEntities();
-        
-        for(Usuario user : usuarios){
-            System.out.println(user.getLogin());
+
+        for (Usuario user : usuarios) {
+
+            System.out.println(user.getLogin() + "senha: " + user.getSenha());
         }
-        
-        
 
         try (ServerSocket serverSocket = new ServerSocket(1234)) {
             System.out.println("Servidor aguardando conexoes na porta 1234...");
 
-        } catch (Exception e) {
+            Socket socket = serverSocket.accept();
+
+            try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+                //		++++SECAO IN E OUT+++++
+                String login = (String) in.readObject();
+                String senha = (String) in.readObject();
+                String mensagem = (String) in.readObject();
+                
+                System.out.println("login=" + login + "   senha=" + senha);
+                System.out.println("mensagem=" + mensagem);
+                
+                out.writeObject("GRAVANDO NO BANCO - login=" + login + " senha=" + login);
+                out.flush();
+            }
+
+        } catch (IOException e) {
+            System.out.println("Sem Conexão");
 
         }
 
