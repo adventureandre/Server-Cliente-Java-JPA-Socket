@@ -1,16 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cadastrocliente;
 
 import java.io.ObjectInputStream;
+import java.util.List;
+import javax.swing.JList;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 /**
+ * Cliente de Thread
  *
  * @author andre
  */
@@ -26,25 +25,33 @@ public class ThreadClient extends Thread {
         textArea = new JTextArea(20, 50);
         textArea.setEditable(false);
         frame.add(new JScrollPane(textArea));
-        frame.pack();
+        frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-
     }
 
     @Override
     public void run() {
         try {
             while (true) {
-                Object data = in.readObject();
-                String mensagem = (String) data;
+                String validate = (String) in.readObject();
+                List<String> produtoList = (List<String>) in.readObject();
+   
+
                 SwingUtilities.invokeLater(() -> {
-                    textArea.append(mensagem + "\n");
-                    textArea.setCaretPosition(textArea.getDocument().getLength()); // Rolagem automática
+                    textArea.append(validate + "\n");
+
+                    textArea.append("Lista de Itens:\n");
+                    for (String item : produtoList) {
+                        textArea.append(item + "\n");
+                    }
+
+                    textArea.setCaretPosition(textArea.getDocument().getLength());
                 });
             }
+
         } catch (Exception e) {
-            System.out.println("Tread Finalizada");
+            System.out.println("Thread Finalizada: " + e.getMessage());
         }
     }
 }

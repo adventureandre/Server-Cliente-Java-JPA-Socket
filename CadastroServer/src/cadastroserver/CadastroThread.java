@@ -4,7 +4,9 @@
  */
 package cadastroserver;
 
+import cadastroserver.controller.ProdutoJpaController;
 import cadastroserver.controller.UsuarioJpaController;
+import cadastroserver.model.Produto;
 import cadastroserver.model.Usuario;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,38 +23,36 @@ import java.util.logging.Logger;
 public class CadastroThread extends Thread {
 
     private final UsuarioJpaController ctrlUsu;
+
+    private final ProdutoJpaController ctrl;
+
     private final Socket s1;
 
-    public CadastroThread(UsuarioJpaController ctrlUsu, Socket s1) {
+    public CadastroThread(UsuarioJpaController ctrlUsu, ProdutoJpaController ctrl, Socket s1) {
         this.ctrlUsu = ctrlUsu;
         this.s1 = s1;
+        this.ctrl = ctrl;
     }
 
     public void run() {
-    try (ObjectOutputStream out = new ObjectOutputStream(s1.getOutputStream()); 
-         ObjectInputStream in = new ObjectInputStream(s1.getInputStream())) {
-        
-        String login = (String) in.readObject();
-        String senha = (String) in.readObject();
-        String mensagem = (String) in.readObject();
+        try (ObjectOutputStream out = new ObjectOutputStream(s1.getOutputStream()); ObjectInputStream in = new ObjectInputStream(s1.getInputStream())) {
 
-        System.out.println("login=" + login + "   senha=" + senha);
-        System.out.println("mensagem=" + mensagem);
+            String login = (String) in.readObject();
+            String senha = (String) in.readObject();
+            String mensagem = (String) in.readObject();
 
-        
-        boolean usuarioValido = validar(login, senha);
+            System.out.println("login=" + login + "   senha=" + senha);
+            System.out.println("mensagem=" + mensagem);
 
-        if (usuarioValido) {
-            out.writeObject("USUÁRIO E SENHA VÁLIDOS");
-        } else {
-            out.writeObject("USUÁRIO OU SENHA INVÁLIDOS");
-        }
+            boolean usuarioValido = validar(login, senha);
 
-        out.flush();
-        
-        
-        
-        
+            List<String> produtoList = ctrl.findProdutoNames();
+
+            out.writeObject(usuarioValido ? "Usuario conectado com sucesso" : "Usuario Inválido!");
+            out.writeObject(produtoList);
+            System.out.println(produtoList.size());
+            out.flush();
+
 //         List<Usuario> usuariosList = ctrlUsu.findUsuarioEntities();
 //
 //            int tamanhoLista = usuariosList.size();
@@ -67,16 +67,15 @@ public class CadastroThread extends Thread {
 //            userTeste.setSenha(senha);
 //
 //            ctrlUsu.create(userTeste);
-
-    } catch (IOException ex) {
-        Logger.getLogger(CadastroThread.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (ClassNotFoundException ex) {
-        Logger.getLogger(CadastroThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(CadastroThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CadastroThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-}
 
-private boolean validar(String login, String senha) {
-    return ctrlUsu.validarUsuario(login, senha);
-}
+    private boolean validar(String login, String senha) {
+        return ctrlUsu.validarUsuario(login, senha);
+    }
 
 }

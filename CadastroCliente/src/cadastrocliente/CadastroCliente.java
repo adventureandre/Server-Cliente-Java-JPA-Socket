@@ -22,31 +22,35 @@ public class CadastroCliente {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        try {
-            Socket socket = new Socket("localhost", 4321);
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+   public static void main(String[] args) {
+    try {
+        Socket socket = new Socket("localhost", 4321);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-            System.out.println("------------------------------");
-            System.out.print("Login: ");
-            String login = reader.readLine();
-            System.out.print("Senha: ");
-            String senha = reader.readLine();
+        System.out.println("------------------------------");
+        System.out.print("Login: ");
+        String login = reader.readLine();
+        System.out.print("Senha: ");
+        String senha = reader.readLine();
 
-            out.writeObject(login);
-            out.writeObject(senha);
-            out.writeObject("Mensagem do cliente para o servidor.");
-            out.flush();
+        out.writeObject(login);
+        out.writeObject(senha);
+        out.writeObject("Mensagem do cliente para o servidor.");
+        out.flush();
+
+        
+             ThreadClient threadClient = new ThreadClient(in);
+        threadClient.start();
             
-            ThreadClient threadClient = new ThreadClient(in);
-             threadClient.start();
-            
-            
-        } catch (IOException ex) {
-            Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+
+       
+    } catch (IOException ex) {
+        Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
     }
+}
+
 
 }

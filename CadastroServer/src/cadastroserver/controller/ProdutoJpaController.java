@@ -199,5 +199,16 @@ public class ProdutoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public List<String> findProdutoNames() {
+        List<Produto> produtos = findProdutoEntities();
+        List<String> nomes = new ArrayList<>();
+
+        for (Produto produto : produtos) {
+            nomes.add(produto.getNome());
+        }
+
+        return nomes;
+    }
+
 }
