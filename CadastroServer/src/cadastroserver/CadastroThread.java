@@ -6,12 +6,12 @@ package cadastroserver;
 
 import cadastroserver.controller.ProdutoJpaController;
 import cadastroserver.controller.UsuarioJpaController;
-import cadastroserver.model.Produto;
-import cadastroserver.model.Usuario;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,17 +41,27 @@ public class CadastroThread extends Thread {
             String senha = (String) in.readObject();
             String mensagem = (String) in.readObject();
 
-            System.out.println("login=" + login + "   senha=" + senha);
-            System.out.println("mensagem=" + mensagem);
+            Date dataAtual = new Date();
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String dataFormatada = formato.format(dataAtual);
+            System.out.println(">> Nova Comunicação em " + dataFormatada);
 
             boolean usuarioValido = validar(login, senha);
 
             List<String> produtoList = ctrl.findProdutoNames();
 
-            out.writeObject(usuarioValido ? "Usuario conectado com sucesso" : "Usuario Inválido!");
-            out.writeObject(produtoList);
+            if(usuarioValido){
+                //logado no sistema
+                out.writeObject(usuarioValido);
+                out.writeObject(produtoList);
             System.out.println(produtoList.size());
-            out.flush();
+                
+            }else{
+                 out.writeObject(usuarioValido);
+                 out.writeObject(null);
+                   
+            }
+           out.flush();
 
 //         List<Usuario> usuariosList = ctrlUsu.findUsuarioEntities();
 //
@@ -67,9 +77,7 @@ public class CadastroThread extends Thread {
 //            userTeste.setSenha(senha);
 //
 //            ctrlUsu.create(userTeste);
-        } catch (IOException ex) {
-            Logger.getLogger(CadastroThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(CadastroThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

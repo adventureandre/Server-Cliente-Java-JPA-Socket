@@ -2,7 +2,6 @@ package cadastrocliente;
 
 import java.io.ObjectInputStream;
 import java.util.List;
-import javax.swing.JList;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -34,24 +33,35 @@ public class ThreadClient extends Thread {
     public void run() {
         try {
             while (true) {
-                String validate = (String) in.readObject();
+                Boolean validate =  (Boolean) in.readObject();
                 List<String> produtoList = (List<String>) in.readObject();
-   
+              
 
-                SwingUtilities.invokeLater(() -> {
-                    textArea.append(validate + "\n");
-
-                    textArea.append("Lista de Itens:\n");
+                SwingUtilities.invokeLater(() -> {  
+                    
+                    if(validate ){
+                        
+                       textArea.append("Usuario conectado com sucesso \n");
+                         textArea.append("Lista de Itens:\n");
+                         
+                         
+                         //logado no sistema
+                         
                     for (String item : produtoList) {
                         textArea.append(item + "\n");
                     }
+                    
+                    }else{
+                        textArea.append("Usuario inválido! \n");
+                    }
+
 
                     textArea.setCaretPosition(textArea.getDocument().getLength());
                 });
             }
 
         } catch (Exception e) {
-            System.out.println("Thread Finalizada: " + e.getMessage());
+            System.out.println("Thread Finalizada1 ");
         }
     }
 }
