@@ -51,9 +51,10 @@ public class CadastroThread extends Thread {
             List<String> produtoList = ctrl.findProdutoNames();
 
             if(usuarioValido){
-                //logado no sistema
                 out.writeObject(usuarioValido);
                 out.writeObject(produtoList);
+                
+                // aki para baixo pode validar o usuario e entrar na classe controller
             System.out.println(produtoList.size());
                 
             }else{
