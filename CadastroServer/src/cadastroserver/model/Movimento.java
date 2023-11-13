@@ -46,7 +46,7 @@ public class Movimento implements Serializable {
     private String tipo;
     @Basic(optional = false)
     @Column(name = "valorUnitario")
-    private BigInteger valorUnitario;
+    private Float valorUnitario;
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id_pessoa")
     @ManyToOne(optional = false)
     private Pessoas idPessoa;
@@ -64,7 +64,7 @@ public class Movimento implements Serializable {
         this.idMovimento = idMovimento;
     }
 
-    public Movimento(Integer idMovimento, int quantidade, String tipo, BigInteger valorUnitario) {
+    public Movimento(Integer idMovimento, int quantidade, String tipo, Float valorUnitario) {
         this.idMovimento = idMovimento;
         this.quantidade = quantidade;
         this.tipo = tipo;
@@ -95,11 +95,11 @@ public class Movimento implements Serializable {
         this.tipo = tipo;
     }
 
-    public BigInteger getValorUnitario() {
+    public Float getValorUnitario() {
         return valorUnitario;
     }
 
-    public void setValorUnitario(BigInteger valorUnitario) {
+    public void setValorUnitario(Float valorUnitario) {
         this.valorUnitario = valorUnitario;
     }
 

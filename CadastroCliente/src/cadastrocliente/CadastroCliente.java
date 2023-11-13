@@ -34,14 +34,15 @@ public class CadastroCliente {
         String login = reader.readLine();
         System.out.print("Senha: ");
         String senha = reader.readLine();
-
+        
+       
+     
         out.writeObject(login);
         out.writeObject(senha);
-        out.writeObject("Mensagem do cliente para o servidor.");
         out.flush();
 
         
-             ThreadClient threadClient = new ThreadClient(in);
+             ThreadClient threadClient = new ThreadClient(in,out);
         threadClient.start();
             
         

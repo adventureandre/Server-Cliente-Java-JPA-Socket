@@ -1,67 +1,84 @@
 package cadastrocliente;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
+import java.io.ObjectOutputStream;
 
-/**
- * Cliente de Thread
- *
- * @author andre
- */
 public class ThreadClient extends Thread {
 
-    private ObjectInputStream in;
-    private final JTextArea textArea;
-    private JFrame frame;
+    private final ObjectOutputStream out;
+    private final ObjectInputStream in;
 
-    public ThreadClient(ObjectInputStream in) {
+    public ThreadClient(ObjectInputStream in, ObjectOutputStream out) {
         this.in = in;
-        frame = new JFrame("Mensagens do Servidor");
-        textArea = new JTextArea(20, 50);
-        textArea.setEditable(false);
-        frame.add(new JScrollPane(textArea));
-        frame.setSize(400, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        this.out = out;
     }
 
     @Override
     public void run() {
         try {
-            while (true) {
-                Boolean validate =  (Boolean) in.readObject();
-                List<String> produtoList = (List<String>) in.readObject();
-              
+            Boolean validate = (Boolean) in.readObject();
+            Integer idUsuario = (Integer) in.readObject();
+           
 
-                SwingUtilities.invokeLater(() -> {  
-                    
-                    if(validate ){
-                        
-                       textArea.append("Usuario conectado com sucesso \n");
-                         textArea.append("Lista de Itens:\n");
-                         
-                         
-                         //logado no sistema
-                         
-                    for (String item : produtoList) {
-                        textArea.append(item + "\n");
+            if (validate) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+                String comando;
+
+                do {
+                    System.out.print("Comando (L - Listar, X - Finalizar, E - Entrada, S - Saída): ");
+                    comando = reader.readLine().toLowerCase();
+
+                    switch (comando) {
+                        case "e":
+                            //Enviar tipo de comando
+                            out.writeObject("e");
+
+                            System.out.print("ID Pessoa: ");
+                            String idPessoa = reader.readLine();
+                            out.writeObject(idPessoa);
+
+                            System.out.print("ID Produto: ");
+                            String idProduto = reader.readLine();
+                            out.writeObject(idProduto);
+                            
+                            System.out.print("ID Usuario: "+ idUsuario);
+                            out.writeObject(idUsuario);
+                            System.out.println("");
+
+                            System.out.print("Quantidade: ");
+                            String quantidade = reader.readLine();
+                            out.writeObject(quantidade);
+
+                            System.out.print("Valor Unitário: ");
+                            String valorUnitario = reader.readLine();
+                            out.writeObject(valorUnitario);
+
+                            break;
+
+                        case "x":
+                            System.out.println("Programa finalizado.");
+                            break;
+
+                        default:
+                            System.out.println("Opção inválida. Escolha novamente.");
+                            break;
                     }
-                    
-                    }else{
-                        textArea.append("Usuario inválido! \n");
-                    }
 
+                } while (!"x".equalsIgnoreCase(comando));
 
-                    textArea.setCaretPosition(textArea.getDocument().getLength());
-                });
+            } else {
+                System.out.println("Usuario e senha não confere!");
             }
 
         } catch (Exception e) {
-            System.out.println("Thread Finalizada1 ");
+            // Verifique se o erro ocorreu devido ao fechamento do programa
+            if (!(e instanceof java.io.EOFException)) {
+                System.out.println("Thread Finalizada ");
+            }
         }
     }
 }
+
