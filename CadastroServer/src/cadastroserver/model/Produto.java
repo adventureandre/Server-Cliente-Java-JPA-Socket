@@ -5,7 +5,6 @@
 package cadastroserver.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -48,7 +47,7 @@ public class Produto implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @Column(name = "precoVenda")
-    private BigDecimal precoVenda;
+    private Float precoVenda;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduto")
     private Collection<Movimento> movimentoCollection;
 
@@ -59,7 +58,7 @@ public class Produto implements Serializable {
         this.idProduto = idProduto;
     }
 
-    public Produto(Integer idProduto, String nome, int quantidade, BigDecimal precoVenda) {
+    public Produto(Integer idProduto, String nome, int quantidade, Float precoVenda) {
         this.idProduto = idProduto;
         this.nome = nome;
         this.quantidade = quantidade;
@@ -90,11 +89,11 @@ public class Produto implements Serializable {
         this.quantidade = quantidade;
     }
 
-    public BigDecimal getPrecoVenda() {
+    public Float getPrecoVenda() {
         return precoVenda;
     }
 
-    public void setPrecoVenda(BigDecimal precoVenda) {
+    public void setPrecoVenda(Float precoVenda) {
         this.precoVenda = precoVenda;
     }
 
