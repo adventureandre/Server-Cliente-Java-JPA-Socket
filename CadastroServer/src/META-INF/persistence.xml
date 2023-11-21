@@ -12,7 +12,7 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=Loja;encrypt=true;trustServerCertificate=true;"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
       <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-      <property name="javax.persistence.jdbc.password" value="542230.Adv"/>
+      <property name="javax.persistence.jdbc.password" value="senha-do-Sa"/>
     </properties>
   </persistence-unit>
 </persistence>
