@@ -71,7 +71,7 @@ public class ComandosHandler {
                         usuario = ctrlUsur.findUsuario(idUsuario);
 
                         if (produto == null) {
-                            System.out.println("Produto não cadastrado!");
+                            System.out.println("Produto não cadastrado! no banco de dados.");
                             continue;
                         }
 
