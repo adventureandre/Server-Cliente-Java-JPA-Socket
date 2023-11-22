@@ -70,6 +70,11 @@ public class ComandosHandler {
                         produto = ctrlProduto.findProduto(idProduto);
                         usuario = ctrlUsur.findUsuario(idUsuario);
 
+                        if (produto == null) {
+                            System.out.println("Produto não cadastrado!");
+                            continue;
+                        }
+
                         movimento = new Movimento();
                         movimento.setIdPessoa(pessoa);
                         movimento.setIdProduto(produto);
@@ -97,6 +102,11 @@ public class ComandosHandler {
                         pessoa = ctrlPessoa.findPessoas(idPessoa);
                         produto = ctrlProduto.findProduto(idProduto);
                         usuario = ctrlUsur.findUsuario(idUsuario);
+
+                        if (produto == null) {
+                            System.out.println("Produto não cadastrado!");
+                            continue;
+                        }
 
                         movimento = new Movimento();
                         movimento.setIdPessoa(pessoa);
